@@ -1,16 +1,14 @@
 name: my-actions
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+  - push
+  - pull_request
 
 jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,16 +18,19 @@ jobs:
         with:
           java-version: 21
           distribution: 'temurin' # Alternative distribution options are available
+
       - uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.7
           arguments: build
+
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
