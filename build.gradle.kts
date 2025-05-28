@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
 	checkstyle
 	application
@@ -31,8 +34,17 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-tasks.withType<Test> {
+tasks.test {
 	useJUnitPlatform()
+	testLogging {
+		exceptionFormat = TestExceptionFormat.FULL
+		events = setOf(
+			TestLogEvent.FAILED,
+			TestLogEvent.PASSED,
+			TestLogEvent.SKIPPED
+		)
+		showStandardStreams = true
+	}
 }
 
 sonar {
