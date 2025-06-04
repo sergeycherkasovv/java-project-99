@@ -36,12 +36,27 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	// DB
+	// DataBase
 	runtimeOnly("com.h2database:h2")
+
+	// Utilities
+	implementation("net.datafaker:datafaker:2.0.2")
+	implementation("org.instancio:instancio-junit:3.3.1")
+	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+
+	// MapStruct
+	implementation("org.mapstruct:mapstruct:1.5.5.Final")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+
+	// OpenAPI(Swagger)
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
 
 	// Tests
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation(platform("org.junit:junit-bom:5.10.0"))
+	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
 }
 
 tasks.test {
