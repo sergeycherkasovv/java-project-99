@@ -1,0 +1,52 @@
+package hexlet.code.controller.api;
+
+import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.dto.user.UserDTO;
+import hexlet.code.dto.user.UserUpdateDTO;
+import hexlet.code.service.CustomUserDetailsService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    @Autowired
+    private CustomUserDetailsService userService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    List<UserDTO> index() {
+        var result = userService.getAllUsers();
+        return result;
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    UserDTO show(@PathVariable Long id) {
+        return userService.findByIdUser(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    UserDTO create(@RequestBody @Valid UserCreateDTO userData) {
+        return userService.createUser(userData);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    UserDTO update(@RequestBody @Valid UserUpdateDTO userData, @PathVariable Long id) {
+        return userService.updateUser(userData, id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void destroy(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+}
