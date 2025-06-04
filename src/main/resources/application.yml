@@ -4,7 +4,8 @@ spring:
     name: app
   jpa:
     generate-ddl: true
-    show-sql: true
+    hibernate:
+      show-sql: true
   output:
     ansi:
       enabled: always
