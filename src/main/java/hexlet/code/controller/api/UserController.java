@@ -3,7 +3,7 @@ package hexlet.code.controller.api;
 import hexlet.code.dto.user.UserCreateDTO;
 import hexlet.code.dto.user.UserDTO;
 import hexlet.code.dto.user.UserUpdateDTO;
-import hexlet.code.service.CustomUserDetailsService;
+import hexlet.code.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +17,14 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private CustomUserDetailsService userService;
+    private UserService userService;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    List<UserDTO> index() {
-        var result = userService.getAllUsers();
-        return result;
+    ResponseEntity<List<UserDTO>> index() {
+        var userDTOList = userService.getAllUsers();
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(userDTOList.size()))
+                .body(userDTOList);
     }
 
     @GetMapping("/{id}")
