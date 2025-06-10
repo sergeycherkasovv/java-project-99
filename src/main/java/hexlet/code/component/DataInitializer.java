@@ -3,6 +3,7 @@ package hexlet.code.component;
 import hexlet.code.dto.user.UserCreateDTO;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -19,6 +20,9 @@ public class DataInitializer implements ApplicationRunner {
     @Autowired
     private final UserMapper userMapper;
 
+    @Autowired
+    private final UserService userService;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var userData = new UserCreateDTO();
@@ -26,7 +30,6 @@ public class DataInitializer implements ApplicationRunner {
         userData.setLastName("Cherkasov");
         userData.setEmail("manager@example.com");
         userData.setPassword("qwerty");
-        var user = userMapper.map(userData);
-        userRepository.save(user);
+        userService.createUser(userData);
     }
 }
