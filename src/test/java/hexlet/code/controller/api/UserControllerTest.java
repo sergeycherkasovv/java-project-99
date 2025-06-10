@@ -15,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -38,7 +41,7 @@ class UserControllerTest {
     private WebApplicationContext wac;
 
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mvc;
 
     @Autowired
     private ObjectMapper om;
@@ -54,18 +57,22 @@ class UserControllerTest {
 
     private User testUser;
 
+    private JwtRequestPostProcessor token;
+
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+        mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                .apply(springSecurity())
                 .build();
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
+        token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
     }
 
     @Test
     void testIndex() throws Exception {
-        var response = mockMvc.perform(get("/api/users"))
+        var response = mvc.perform(get("/api/users").with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -80,8 +87,8 @@ class UserControllerTest {
 
     @Test
     void testShow() throws Exception {
-        var request = get("/api/users/{id}", testUser.getId());
-        var result = mockMvc.perform(request)
+        var request = get("/api/users/{id}", testUser.getId()).with(jwt());
+        var result = mvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
         var body = result.getResponse().getContentAsString();
@@ -89,7 +96,7 @@ class UserControllerTest {
         assertThatJson(body).and(
                 v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
                 v -> v.node("lastName").isEqualTo(testUser.getLastName()),
-                v -> v.node("email").isEqualTo(testUser.getEmail())
+                v -> v.node("username").isEqualTo(testUser.getEmail())
         );
     }
 
@@ -99,10 +106,11 @@ class UserControllerTest {
                 .create();
 
         var request = post("/api/users")
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
-        mockMvc.perform(request)
+        mvc.perform(request)
                 .andExpect(status().isCreated());
 
         var user = userRepository.findByEmail(data.getEmail()).orElse(null);
@@ -119,10 +127,11 @@ class UserControllerTest {
         data.put("firstName", "Mike");
 
         var request = put("/api/users/" + testUser.getId())
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
-        mockMvc.perform(request)
+        mvc.perform(request)
                 .andExpect(status().isOk());
 
         var user = userRepository.findById(testUser.getId()).orElseThrow();
