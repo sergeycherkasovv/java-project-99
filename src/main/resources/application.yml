@@ -10,9 +10,17 @@ spring:
     ansi:
       enabled: always
 
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
+
 logging:
   level:
     root: WARN
+    org:
+      springframework:
+        # web: DEBUG
+        security: DEBUG
 
 server:
   address: 0.0.0.0
