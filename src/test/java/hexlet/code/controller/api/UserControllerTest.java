@@ -8,14 +8,14 @@ import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.util.ModelGenerator;
 import org.instancio.Instancio;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
+import org.springframework.security.test.web.servlet.request
+        .SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -82,7 +82,7 @@ class UserControllerTest {
 
         var actual = userDTOList.stream().map(userMapper::map).toList();
         var expected = userRepository.findAll();
-        Assertions.assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
@@ -110,8 +110,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
-        mvc.perform(request)
-                .andExpect(status().isCreated());
+        mvc.perform(request).andExpect(status().isCreated());
 
         var user = userRepository.findByEmail(data.getEmail()).orElse(null);
 
@@ -131,8 +130,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
-        mvc.perform(request)
-                .andExpect(status().isOk());
+        mvc.perform(request).andExpect(status().isOk());
 
         var user = userRepository.findById(testUser.getId()).orElseThrow();
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
