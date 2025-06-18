@@ -65,6 +65,7 @@ class UserControllerTest {
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
                 .build();
+
         testUser = Instancio.of(modelGenerator.getUserModel()).create();
         userRepository.save(testUser);
         token = jwt().jwt(builder -> builder.subject(testUser.getEmail()));
@@ -96,14 +97,13 @@ class UserControllerTest {
         assertThatJson(body).and(
                 v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
                 v -> v.node("lastName").isEqualTo(testUser.getLastName()),
-                v -> v.node("username").isEqualTo(testUser.getEmail())
+                v -> v.node("email").isEqualTo(testUser.getEmail())
         );
     }
 
     @Test
     void testCreate() throws Exception {
-        var data = Instancio.of(modelGenerator.getUserModel())
-                .create();
+        var data = Instancio.of(modelGenerator.getUserModel()).create();
 
         var request = post("/api/users")
                 .with(token)
