@@ -18,12 +18,12 @@ public abstract class UserMapper {
     @Autowired
     private PasswordEncoder encoder;
 
-    @Mapping(target = "username", source = "email")
     public abstract UserDTO map(User model);
 
-    @Mapping(target = "passwordDigest", source = "password")
+    @Mapping(source = "password", target = "passwordDigest")
     public abstract User map(UserCreateDTO dto);
 
+    @Mapping(source = "password", target = "passwordDigest")
     public abstract void update(UserUpdateDTO dto, @MappingTarget User model);
 
     public abstract User map(UserDTO dto);
