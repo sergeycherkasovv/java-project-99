@@ -63,7 +63,7 @@ public class DataInitializer implements ApplicationRunner {
 
         var user = userRepository.findByEmail(email).get();
 
-        taskStatusData.values().forEach(v -> {
+        taskStatusData.values().forEach(v ->
             IntStream.range(1, 10).forEach(i -> {
                 var task = new TaskCreateDTO();
                 task.setIndex(faker.number().numberBetween(1, 1000));
@@ -72,7 +72,7 @@ public class DataInitializer implements ApplicationRunner {
                 task.setContent(faker.hobbit().quote());
                 task.setStatus(v);
                 taskService.createTask(task);
-            });
-        });
+            })
+        );
     }
 }
