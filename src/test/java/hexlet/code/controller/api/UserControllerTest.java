@@ -36,6 +36,7 @@ import java.util.List;
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
+    private final String url = "/api/users";
 
     @Autowired
     private WebApplicationContext wac;
@@ -73,7 +74,7 @@ class UserControllerTest {
 
     @Test
     void testIndex() throws Exception {
-        var response = mvc.perform(get("/api/users").with(jwt()))
+        var response = mvc.perform(get(url).with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -88,11 +89,12 @@ class UserControllerTest {
 
     @Test
     void testShow() throws Exception {
-        var request = get("/api/users/{id}", testUser.getId()).with(jwt());
+        var request = get(url + "/{id}", testUser.getId()).with(jwt());
         var result = mvc.perform(request)
                 .andExpect(status().isOk())
-                .andReturn();
-        var body = result.getResponse().getContentAsString();
+                .andReturn()
+                .getResponse();
+        var body = result.getContentAsString();
 
         assertThatJson(body).and(
                 v -> v.node("firstName").isEqualTo(testUser.getFirstName()),
@@ -105,8 +107,7 @@ class UserControllerTest {
     void testCreate() throws Exception {
         var data = Instancio.of(modelGenerator.getUserModel()).create();
 
-        var request = post("/api/users")
-                .with(token)
+        var request = post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
@@ -125,7 +126,7 @@ class UserControllerTest {
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
-        var request = put("/api/users/" + testUser.getId())
+        var request = put(url + "/{id}", testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
