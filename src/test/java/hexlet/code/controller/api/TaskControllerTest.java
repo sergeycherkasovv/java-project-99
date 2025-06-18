@@ -36,6 +36,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 class TaskControllerTest {
     private final String url = "/api/tasks";
+
     @Autowired
     private WebApplicationContext wac;
 
