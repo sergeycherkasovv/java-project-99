@@ -32,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class TaskStatusControllerTest {
+    private final String url = "/api/task_statuses";
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -64,7 +66,7 @@ class TaskStatusControllerTest {
 
     @Test
     void testIndex() throws Exception {
-        var response = mvc.perform(get("/api/task_statuses"))
+        var response = mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse();
@@ -79,11 +81,12 @@ class TaskStatusControllerTest {
 
     @Test
     void testShow() throws Exception {
-        var request = get("/api/task_statuses/{id}", testTaskStatus.getId());
+        var request = get(url + "/{id}", testTaskStatus.getId());
         var result = mvc.perform(request)
                 .andExpect(status().isOk())
-                .andReturn();
-        var body = result.getResponse().getContentAsString();
+                .andReturn()
+                .getResponse();
+        var body = result.getContentAsString();
 
         assertThatJson(body).and(
                 v -> v.node("slug").isEqualTo(testTaskStatus.getSlug()),
@@ -95,7 +98,7 @@ class TaskStatusControllerTest {
     void testCreate() throws Exception {
         var data = Instancio.of(modelGenerator.getTaskStatusModel()).create();
 
-        var request = post("/api/task_statuses")
+        var request = post(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
@@ -113,7 +116,7 @@ class TaskStatusControllerTest {
         var data = new HashMap<>();
         data.put("name", "update");
 
-        var request = put("/api/task_statuses/" + testTaskStatus.getId())
+        var request = put(url + "/{id}", testTaskStatus.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
