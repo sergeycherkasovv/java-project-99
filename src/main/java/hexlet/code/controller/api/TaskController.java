@@ -1,0 +1,52 @@
+package hexlet.code.controller.api;
+
+import hexlet.code.dto.task.TaskCreateDTO;
+import hexlet.code.dto.task.TaskDTO;
+import hexlet.code.dto.task.TaskUpdateDTO;
+import hexlet.code.service.TaskService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/tasks")
+public class TaskController {
+    @Autowired
+    private TaskService taskService;
+
+    @GetMapping
+    ResponseEntity<List<TaskDTO>> index() {
+        var taskDTOList = taskService.getAllTask();
+        return ResponseEntity.ok()
+                .header("X-Total-Count", String.valueOf(taskDTOList.size()))
+                .body(taskDTOList);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDTO show(@PathVariable Long id) {
+        return taskService.findByIdTask(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskDTO create(@RequestBody @Valid TaskCreateDTO taskData) {
+        return taskService.createTask(taskData);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TaskDTO update(@RequestBody @Valid TaskUpdateDTO taskData, @PathVariable Long id) {
+        return taskService.updateTask(taskData, id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void destroy(@PathVariable Long id) {
+        taskService.deleteTask(id);
+    }
+}
