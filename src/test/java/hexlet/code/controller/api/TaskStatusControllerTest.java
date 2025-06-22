@@ -33,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class TaskStatusControllerTest {
     private final String url = "/api/task_statuses";
+    private final String urlId = "/api/task_statuses/{id}";
 
     @Autowired
     private WebApplicationContext wac;
@@ -55,7 +56,7 @@ class TaskStatusControllerTest {
     private TaskStatus testTaskStatus;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
@@ -65,7 +66,7 @@ class TaskStatusControllerTest {
     }
 
     @Test
-    void testIndex() throws Exception {
+    void index() throws Exception {
         var response = mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -76,12 +77,13 @@ class TaskStatusControllerTest {
 
         var actual = taskStatusDTOList.stream().map(taskStatusMapper::map).toList();
         var expected = taskStatusRepository.findAll();
+
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
-    void testShow() throws Exception {
-        var request = get(url + "/{id}", testTaskStatus.getId());
+    void show() throws Exception {
+        var request = get(urlId, testTaskStatus.getId());
         var result = mvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn()
@@ -95,7 +97,7 @@ class TaskStatusControllerTest {
     }
 
     @Test
-    void testCreate() throws Exception {
+    void create() throws Exception {
         var data = Instancio.of(modelGenerator.getTaskStatusModel()).create();
 
         var request = post(url)
@@ -104,7 +106,7 @@ class TaskStatusControllerTest {
 
         mvc.perform(request).andExpect(status().isCreated());
 
-        var taskStatus = taskStatusRepository.findBySlug(data.getSlug()).orElse(null);
+        var taskStatus = taskStatusRepository.findBySlug(data.getSlug()).orElseThrow();
 
         assertThat(taskStatus).isNotNull();
         assertThat(taskStatus.getSlug()).isEqualTo(data.getSlug());
@@ -112,17 +114,18 @@ class TaskStatusControllerTest {
     }
 
     @Test
-    void testUpdate() throws Exception {
+    void update() throws Exception {
         var data = new HashMap<>();
         data.put("name", "update");
 
-        var request = put(url + "/{id}", testTaskStatus.getId())
+        var request = put(urlId, testTaskStatus.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isOk());
 
         var taskStatus = taskStatusRepository.findById(testTaskStatus.getId()).orElseThrow();
+
         assertThat(taskStatus.getName()).isEqualTo("update");
     }
 }
