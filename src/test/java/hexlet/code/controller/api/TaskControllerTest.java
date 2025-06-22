@@ -36,6 +36,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 class TaskControllerTest {
     private final String url = "/api/tasks";
+    private final String urlId = "/api/tasks/{id}";
 
     @Autowired
     private WebApplicationContext wac;
@@ -58,7 +59,7 @@ class TaskControllerTest {
     private Task testTask;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
@@ -68,7 +69,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void testIndex() throws Exception {
+    void index() throws Exception {
         var response = mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -79,12 +80,13 @@ class TaskControllerTest {
 
         var actual = taskDTOList.stream().map(taskMapper::map).toList();
         var expected = taskRepository.findAll();
+
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
-    void testShow() throws Exception {
-        var request = get(url + "/{id}", testTask.getId());
+    void show() throws Exception {
+        var request = get(urlId, testTask.getId());
         var result = mvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn()
@@ -101,7 +103,7 @@ class TaskControllerTest {
     }
 
     @Test
-    void testCreate() throws Exception {
+    void create() throws Exception {
         var createData = new TaskCreateDTO();
         createData.setIndex(testTask.getIndex());
         createData.setTitle("TestTask");
@@ -115,7 +117,7 @@ class TaskControllerTest {
 
         mvc.perform(request).andExpect(status().isCreated());
 
-        var task = taskRepository.findByName(createData.getTitle()).orElse(null);
+        var task = taskRepository.findByName(createData.getTitle()).orElseThrow();
 
         assertThat(task).isNotNull();
         assertThat(task.getIndex()).isEqualTo(createData.getIndex());
@@ -125,17 +127,18 @@ class TaskControllerTest {
     }
 
     @Test
-    void testUpdate() throws Exception {
+    void update() throws Exception {
         var data = new HashMap<>();
         data.put("index", 12345);
 
-        var request = put(url + "/{id}", testTask.getId())
+        var request = put(urlId, testTask.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isOk());
 
-        var task = taskRepository.findById(testTask.getId()).orElse(null);
+        var task = taskRepository.findById(testTask.getId()).orElseThrow();
+
         assertThat(task.getIndex()).isEqualTo(12345);
     }
 }
