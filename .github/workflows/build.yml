@@ -16,9 +16,8 @@ jobs:
           java-version: 21
           distribution: 'temurin' # Alternative distribution options are available
 
-      - uses: gradle/gradle-build-action@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
-          #gradle-version: 8.7
           arguments: build
 
       - name: Cache SonarQube packages
