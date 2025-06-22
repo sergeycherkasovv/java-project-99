@@ -30,17 +30,16 @@ public class TaskStatus {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(unique = true)
     @NotBlank
+    @Column(unique = true)
+    @EqualsAndHashCode.Include
     private String slug;
 
-    @Column(unique = true)
     @NotBlank
+    @Column(unique = true)
+    @EqualsAndHashCode.Include
     private String name;
 
     @CreatedDate
     private LocalDate createdAt;
-
-    @LastModifiedDate
-    private LocalDate updatedAt;
 }
