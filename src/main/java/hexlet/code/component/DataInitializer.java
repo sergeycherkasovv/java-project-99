@@ -1,9 +1,11 @@
 package hexlet.code.component;
 
+import hexlet.code.dto.label.LabelCreateDTO;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.taskStatus.TaskStatusCreateDTO;
 import hexlet.code.dto.user.UserCreateDTO;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.service.LabelService;
 import hexlet.code.service.TaskService;
 import hexlet.code.service.TaskStatusService;
 import hexlet.code.service.UserService;
@@ -14,6 +16,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -33,12 +37,16 @@ public class DataInitializer implements ApplicationRunner {
     private final TaskService taskService;
 
     @Autowired
+    private final LabelService labelService;
+
+    @Autowired
     private final Faker faker;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         var email = "hexlet@example.com";
 
+        // User
         var userData = new UserCreateDTO();
         userData.setFirstName("Sergey");
         userData.setLastName("Cherkasov");
@@ -46,6 +54,7 @@ public class DataInitializer implements ApplicationRunner {
         userData.setPassword("qwerty");
         userService.createUser(userData);
 
+        // TaskStatus
         var taskStatusData = Map.of(
                 "Draft", "draft",
                 "ToReview", "to_review",
@@ -61,6 +70,7 @@ public class DataInitializer implements ApplicationRunner {
             taskStatusService.createTaskStatus(taskStatus);
         });
 
+        // Task
         var user = userRepository.findByEmail(email).get();
 
         taskStatusData.values().forEach(v ->
@@ -74,5 +84,17 @@ public class DataInitializer implements ApplicationRunner {
                 taskService.createTask(task);
             })
         );
+
+        // Label
+        var labelData = List.of(
+                "feature",
+                "bug"
+        );
+
+        labelData.forEach(l -> {
+            var label = new LabelCreateDTO();
+            label.setName(l);
+            labelService.createLabel(label);
+        });
     }
 }
