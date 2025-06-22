@@ -41,6 +41,7 @@ public class User implements UserDetails, BaseEntity {
 
     @Email
     @Column(unique = true)
+    @EqualsAndHashCode.Include
     private String email;
 
     @NotBlank
