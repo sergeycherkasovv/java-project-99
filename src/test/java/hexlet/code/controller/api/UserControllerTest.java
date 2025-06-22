@@ -37,6 +37,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 class UserControllerTest {
     private final String url = "/api/users";
+    private final String urlId = "/api/users/{id}";
 
     @Autowired
     private WebApplicationContext wac;
@@ -61,7 +62,7 @@ class UserControllerTest {
     private JwtRequestPostProcessor token;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .apply(springSecurity())
@@ -73,7 +74,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testIndex() throws Exception {
+    void index() throws Exception {
         var response = mvc.perform(get(url).with(jwt()))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -88,8 +89,8 @@ class UserControllerTest {
     }
 
     @Test
-    void testShow() throws Exception {
-        var request = get(url + "/{id}", testUser.getId()).with(jwt());
+    void show() throws Exception {
+        var request = get(urlId, testUser.getId()).with(jwt());
         var result = mvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn()
@@ -104,16 +105,17 @@ class UserControllerTest {
     }
 
     @Test
-    void testCreate() throws Exception {
+    void create() throws Exception {
         var data = Instancio.of(modelGenerator.getUserModel()).create();
 
         var request = post(url)
+                .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isCreated());
 
-        var user = userRepository.findByEmail(data.getEmail()).orElse(null);
+        var user = userRepository.findByEmail(data.getEmail()).orElseThrow();
 
         assertThat(user).isNotNull();
         assertThat(user.getFirstName()).isEqualTo(data.getFirstName());
@@ -122,11 +124,11 @@ class UserControllerTest {
     }
 
     @Test
-    public void testUpdate() throws Exception {
+    void update() throws Exception {
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
-        var request = put(url + "/{id}", testUser.getId())
+        var request = put(urlId, testUser.getId())
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
@@ -134,6 +136,7 @@ class UserControllerTest {
         mvc.perform(request).andExpect(status().isOk());
 
         var user = userRepository.findById(testUser.getId()).orElseThrow();
+
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
     }
 }
