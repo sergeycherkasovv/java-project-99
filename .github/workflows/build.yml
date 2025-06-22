@@ -17,6 +17,7 @@ jobs:
           distribution: 'temurin' # Alternative distribution options are available
 
       - uses: gradle/actions/setup-gradle@v4
+      - run: gradle build --configuration-cache
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
