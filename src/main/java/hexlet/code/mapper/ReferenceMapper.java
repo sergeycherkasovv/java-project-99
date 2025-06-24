@@ -13,8 +13,9 @@ import org.mapstruct.Named;
 import org.mapstruct.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING
@@ -42,24 +43,21 @@ public abstract class ReferenceMapper {
     }
 
     @Named("toLabelsById")
-    public List<Label> toLabelsById(List<Long> labelsId) {
+    public Set<Label> toLabelsById(Set<Long> labelsId) {
         return labelsId == null || labelsId.isEmpty()
-                ? new ArrayList<>()
-                : labelsId.stream().map(this::getLabelById).toList();
+                ? new HashSet<>()
+                : labelsId.stream().map(this::getLabelById).collect(Collectors.toSet());
     }
 
     @Named("toIdByLabels")
-    public List<Long> toIdByLabels(List<Label> labels) {
+    public Set<Long> toIdByLabels(Set<Label> labels) {
         return labels == null || labels.isEmpty()
-                ? new ArrayList<>()
-                : labels.stream().map(Label::getId)
-                .toList();
+                ? new HashSet<>()
+                : labels.stream().map(Label::getId).collect(Collectors.toSet());
     }
 
     private Label getLabelById(Long id) {
         return labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
     }
-
-
 }
