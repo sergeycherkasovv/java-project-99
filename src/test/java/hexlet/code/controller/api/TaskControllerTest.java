@@ -76,7 +76,7 @@ class TaskControllerTest {
                 .getResponse();
         var body = response.getContentAsString();
 
-        List<TaskDTO> taskDTOList = om.readValue(body, new TypeReference<>() {});
+        List<TaskDTO> taskDTOList = om.readValue(body, new TypeReference<>() { });
 
         var actual = taskDTOList.stream().map(taskMapper::map).toList();
         var expected = taskRepository.findAll();
