@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request
         .SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -35,6 +36,7 @@ import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles(value = "development")
 class UserControllerTest {
     private final String url = "/api/users";
     private final String urlId = "/api/users/{id}";
