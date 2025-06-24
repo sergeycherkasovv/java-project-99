@@ -85,6 +85,23 @@ class TaskControllerTest {
     }
 
     @Test
+    void filteredIndex() throws Exception {
+        var assigneeId = testTask.getAssignee().getId();
+
+        var response = mvc
+                .perform(get("/api/tasks?assigneeId=" + assigneeId))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse();
+        var body = response.getContentAsString();
+
+        assertThatJson(body)
+                .isArray()
+                .first()
+                .node("assignee_id").isEqualTo(assigneeId);
+    }
+
+    @Test
     void show() throws Exception {
         var request = get(urlId, testTask.getId());
         var result = mvc.perform(request)
@@ -98,7 +115,8 @@ class TaskControllerTest {
                 v -> v.node("title").isEqualTo(testTask.getName()),
                 v -> v.node("content").isEqualTo(testTask.getDescription()),
                 v -> v.node("status").isEqualTo(testTask.getTaskStatus().getSlug()),
-                v -> v.node("assignee_id").isEqualTo(testTask.getAssignee().getId())
+                v -> v.node("assignee_id").isEqualTo(testTask.getAssignee().getId()),
+                v -> v.node("taskLabelIds").isArray().hasSizeGreaterThan(0)
         );
     }
 
