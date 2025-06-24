@@ -15,10 +15,10 @@ public class TaskSpecification {
     }
 
     private Specification<Task> withTitleCont(String titleCont) {
-        return (root,query, criteriaBuilder) -> titleCont == null
+        return (root, query, criteriaBuilder) -> titleCont == null
                 ? criteriaBuilder.conjunction()
                 : criteriaBuilder
-                        .like(criteriaBuilder.lower(root.get("name")),"%" + titleCont.toLowerCase() + "%");
+                        .like(criteriaBuilder.lower(root.get("name")), "%" + titleCont.toLowerCase() + "%");
     }
 
     private Specification<Task> withAssigneeId(Long assigneeId) {
