@@ -33,6 +33,11 @@ public abstract class TaskMapper {
     @Mapping(source = "taskLabelIds", target = "labels", qualifiedByName = "toLabelsById")
     public abstract Task map(TaskCreateDTO dto);
 
+    @Mapping(source = "assigneeId", target = "assignee.id")
+    @Mapping(source = "title", target = "name")
+    @Mapping(source = "content", target = "description")
+    @Mapping(source = "status", target = "taskStatus", qualifiedByName = "toTaskStatusBySlug")
+    @Mapping(source = "taskLabelIds", target = "labels", qualifiedByName = "toLabelsById")
     public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
     @Mapping(source = "assigneeId", target = "assignee.id")
