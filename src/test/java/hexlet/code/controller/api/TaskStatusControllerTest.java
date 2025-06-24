@@ -73,7 +73,7 @@ class TaskStatusControllerTest {
                 .getResponse();
         var body = response.getContentAsString();
 
-        List<TaskStatusDTO> taskStatusDTOList = om.readValue(body, new TypeReference<>() {});
+        List<TaskStatusDTO> taskStatusDTOList = om.readValue(body, new TypeReference<>() { });
 
         var actual = taskStatusDTOList.stream().map(taskStatusMapper::map).toList();
         var expected = taskStatusRepository.findAll();
