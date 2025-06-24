@@ -4,6 +4,7 @@ import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -14,6 +15,8 @@ import org.instancio.Model;
 import org.instancio.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Getter
 @Component
@@ -32,8 +35,12 @@ public class ModelGenerator {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
+
     @PostConstruct
     private void init() {
+
         userModel = Instancio.of(User.class)
                 .ignore(Select.field(User::getId))
                 .supply(Select.field(User::getFirstName), () -> faker.name().firstName())
@@ -47,8 +54,15 @@ public class ModelGenerator {
                 .supply(Select.field(TaskStatus::getSlug), () -> faker.name().name())
                 .toModel();
 
+        labelModel = Instancio.of(Label.class)
+                .ignore(Select.field(Label::getId))
+                .supply(Select.field(Label::getName), () -> faker.music().genre())
+                .toModel();
+
         var user = userRepository.save(Instancio.create(userModel));
         var taskStatus = taskStatusRepository.save(Instancio.create(taskStatusModel));
+        var label = labelRepository.save(Instancio.create(labelModel));
+
         taskModel = Instancio.of(Task.class)
                 .ignore(Select.field(Task::getId))
                 .supply(Select.field(Task::getName), () -> faker.book().genre())
@@ -56,12 +70,7 @@ public class ModelGenerator {
                 .supply(Select.field(Task::getDescription), () -> faker.hobbit().quote())
                 .supply(Select.field(Task::getTaskStatus), () -> taskStatus)
                 .supply(Select.field(Task::getAssignee), () -> user)
-                .ignore(Select.field(Task::getLabels))
-                .toModel();
-
-        labelModel = Instancio.of(Label.class)
-                .ignore(Select.field(Label::getId))
-                .supply(Select.field(Label::getName), () -> faker.music().genre())
+                .supply(Select.field(Task::getLabels), () -> Set.of(label))
                 .toModel();
     }
 }
