@@ -21,9 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
@@ -102,6 +100,7 @@ class LabelControllerTest {
     @Test
     void create() throws Exception {
         var data = Instancio.of(modelGenerator.getLabelModel()).create();
+        var labelName = data.getName();
 
         var request = post(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,25 +108,38 @@ class LabelControllerTest {
 
         mvc.perform(request).andExpect(status().isCreated());
 
-        var label = labelRepository.findByName(data.getName()).orElseThrow();
+        var label = labelRepository.findByName(labelName).orElseThrow();
 
         assertThat(label).isNotNull();
-        assertThat(label.getName()).isEqualTo(data.getName());
+        assertThat(label.getName()).isEqualTo(labelName);
     }
 
     @Test
     void update() throws Exception {
+        var labelId = testLabel.getId();
+
         var data = new HashMap<>();
         data.put("name", "test");
 
-        var request = put(urlId, testLabel.getId())
+        var request = put(urlId, labelId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isOk());
 
-        var label = labelRepository.findById(testLabel.getId()).orElseThrow();
+        var label = labelRepository.findById(labelId).orElseThrow();
 
         assertThat(label.getName()).isEqualTo("test");
+    }
+
+    @Test
+    void destroy() throws Exception {
+        var labelId = testLabel.getId();
+
+        mvc.perform(delete(urlId, labelId))
+                .andExpect(status().isNoContent());
+
+        var task = labelRepository.existsById(labelId);
+        assertThat(task).isFalse();
     }
 }
