@@ -35,6 +35,7 @@ public class Task implements BaseEntity {
     private Long id;
 
     @NotBlank
+    @EqualsAndHashCode.Include
     private String name;
 
     private Integer index;
