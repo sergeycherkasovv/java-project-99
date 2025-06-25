@@ -37,6 +37,7 @@ public class Label {
     @NotNull
     @Column(unique = true)
     @Size(min = 3, max = 1000)
+    @EqualsAndHashCode.Include
     private String name;
 
     @CreatedDate
