@@ -24,38 +24,41 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
+    private final String id = "/{id}";
+
     @Autowired
     private TaskService taskService;
 
     @GetMapping
     ResponseEntity<List<TaskDTO>> index(TaskParamsDTO params) {
         var taskDTOList = taskService.getAllTask(params);
+
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(taskDTOList.size()))
                 .body(taskDTOList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(id)
     @ResponseStatus(HttpStatus.OK)
-    public TaskDTO show(@PathVariable Long id) {
+    TaskDTO show(@PathVariable Long id) {
         return taskService.findByIdTask(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TaskDTO create(@RequestBody @Valid TaskCreateDTO taskData) {
+    TaskDTO create(@RequestBody @Valid TaskCreateDTO taskData) {
         return taskService.createTask(taskData);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(id)
     @ResponseStatus(HttpStatus.OK)
-    public TaskDTO update(@RequestBody @Valid TaskUpdateDTO taskData, @PathVariable Long id) {
+    TaskDTO update(@RequestBody @Valid TaskUpdateDTO taskData, @PathVariable Long id) {
         return taskService.updateTask(taskData, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(id)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void destroy(@PathVariable Long id) {
+    void destroy(@PathVariable Long id) {
         taskService.deleteTask(id);
     }
 }
