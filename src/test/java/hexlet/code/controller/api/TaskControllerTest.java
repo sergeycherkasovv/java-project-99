@@ -60,6 +60,8 @@ class TaskControllerTest {
 
     @BeforeEach
     void setUp() {
+        taskRepository.deleteAll();
+
         mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
