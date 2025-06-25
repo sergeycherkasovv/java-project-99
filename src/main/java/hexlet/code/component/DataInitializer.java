@@ -73,7 +73,7 @@ public class DataInitializer implements ApplicationRunner {
         var user = userRepository.findByEmail(email).get();
 
         taskStatusData.values().forEach(v ->
-            IntStream.range(1, 10).forEach(i -> {
+            IntStream.range(1, 5).forEach(i -> {
                 var task = new TaskCreateDTO();
                 task.setIndex(faker.number().numberBetween(1, 1000));
                 task.setAssigneeId(user.getId());
