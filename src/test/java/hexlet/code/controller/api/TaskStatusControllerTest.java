@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -99,6 +100,7 @@ class TaskStatusControllerTest {
     @Test
     void create() throws Exception {
         var data = Instancio.of(modelGenerator.getTaskStatusModel()).create();
+        var taskStatusSlag = data.getSlug();
 
         var request = post(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -106,26 +108,39 @@ class TaskStatusControllerTest {
 
         mvc.perform(request).andExpect(status().isCreated());
 
-        var taskStatus = taskStatusRepository.findBySlug(data.getSlug()).orElseThrow();
+        var taskStatus = taskStatusRepository.findBySlug(taskStatusSlag).orElseThrow();
 
         assertThat(taskStatus).isNotNull();
-        assertThat(taskStatus.getSlug()).isEqualTo(data.getSlug());
+        assertThat(taskStatus.getSlug()).isEqualTo(taskStatusSlag);
         assertThat(taskStatus.getName()).isEqualTo(data.getName());
     }
 
     @Test
     void update() throws Exception {
+        var taskStatusId = testTaskStatus.getId();
+
         var data = new HashMap<>();
         data.put("name", "update");
 
-        var request = put(urlId, testTaskStatus.getId())
+        var request = put(urlId, taskStatusId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isOk());
 
-        var taskStatus = taskStatusRepository.findById(testTaskStatus.getId()).orElseThrow();
+        var taskStatus = taskStatusRepository.findById(taskStatusId).orElseThrow();
 
         assertThat(taskStatus.getName()).isEqualTo("update");
+    }
+
+    @Test
+    void destroy() throws Exception {
+        var taskStatusId = testTaskStatus.getId();
+
+        mvc.perform(delete(urlId, taskStatusId))
+                .andExpect(status().isNoContent());
+
+        var task = taskStatusRepository.existsById(taskStatusId);
+        assertThat(task).isFalse();
     }
 }
