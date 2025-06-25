@@ -1,6 +1,3 @@
-# BEGIN
----
 spring:
   datasource:
     url: jdbc:h2:mem:test
-# END
