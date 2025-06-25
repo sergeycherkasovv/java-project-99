@@ -6,4 +6,4 @@ COPY / .
 
 RUN gradle installDist
 
-CMD java -jar build/libs/HexletSpringBlog-1.0-SNAPSHOT.jar
+CMD ./build/install/app/bin/app
