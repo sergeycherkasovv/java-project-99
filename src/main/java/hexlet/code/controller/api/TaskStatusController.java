@@ -23,8 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/task_statuses")
 public class TaskStatusController {
-    private final String id = "/{id}";
-
     @Autowired
     private TaskStatusService taskStatusService;
 
@@ -37,7 +35,7 @@ public class TaskStatusController {
                 .body(taskStatusDTOList);
     }
 
-    @GetMapping(id)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     TaskStatusDTO show(@PathVariable Long id) {
         return taskStatusService.findByIdTaskStatus(id);
@@ -49,13 +47,13 @@ public class TaskStatusController {
         return taskStatusService.createTaskStatus(taskStatusData);
     }
 
-    @PutMapping(id)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     TaskStatusDTO update(@RequestBody @Valid TaskStatusUpdateDTO taskStatusData, @PathVariable Long id) {
         return taskStatusService.updateTaskStatus(taskStatusData, id);
     }
 
-    @DeleteMapping(id)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void destroy(@PathVariable Long id) {
         taskStatusService.deleteTaskStatus(id);

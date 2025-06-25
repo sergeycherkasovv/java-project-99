@@ -23,8 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/labels")
 public class LabelController {
-    private final String id = "/{id}";
-
     @Autowired
     private LabelService labelService;
 
@@ -37,7 +35,7 @@ public class LabelController {
                 .body(lebelDTOList);
     }
 
-    @GetMapping(id)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     LabelDTO show(@PathVariable Long id) {
         return labelService.findByIdLabel(id);
@@ -49,13 +47,13 @@ public class LabelController {
         return labelService.createLabel(labelDTO);
     }
 
-    @PutMapping(id)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     LabelDTO update(@RequestBody @Valid LabelUpdateDTO labelDTO, @PathVariable Long id) {
         return labelService.updateLabel(labelDTO, id);
     }
 
-    @DeleteMapping(id)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void destroy(@PathVariable Long id) {
         labelService.deleteLabel(id);

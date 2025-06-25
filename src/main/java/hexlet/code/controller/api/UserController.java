@@ -23,8 +23,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final String id = "/{id}";
-
     @Autowired
     private UserService userService;
 
@@ -37,7 +35,7 @@ public class UserController {
                 .body(userDTOList);
     }
 
-    @GetMapping(id)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     UserDTO show(@PathVariable Long id) {
         return userService.findByIdUser(id);
@@ -49,13 +47,13 @@ public class UserController {
         return userService.createUser(userData);
     }
 
-    @PutMapping(id)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     UserDTO update(@RequestBody @Valid UserUpdateDTO userData, @PathVariable Long id) {
         return userService.updateUser(userData, id);
     }
 
-    @DeleteMapping(id)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void destroy(@PathVariable Long id) {
         userService.deleteUser(id);

@@ -24,8 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
-    private final String id = "/{id}";
-
     @Autowired
     private TaskService taskService;
 
@@ -38,7 +36,7 @@ public class TaskController {
                 .body(taskDTOList);
     }
 
-    @GetMapping(id)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     TaskDTO show(@PathVariable Long id) {
         return taskService.findByIdTask(id);
@@ -50,13 +48,13 @@ public class TaskController {
         return taskService.createTask(taskData);
     }
 
-    @PutMapping(id)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     TaskDTO update(@RequestBody @Valid TaskUpdateDTO taskData, @PathVariable Long id) {
         return taskService.updateTask(taskData, id);
     }
 
-    @DeleteMapping(id)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void destroy(@PathVariable Long id) {
         taskService.deleteTask(id);
