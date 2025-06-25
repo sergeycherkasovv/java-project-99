@@ -14,6 +14,6 @@ public class WelcomeController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     String welcome() {
-        return "Welcome to Spring!";
+        return "Welcome to Task Manager!";
     }
 }
