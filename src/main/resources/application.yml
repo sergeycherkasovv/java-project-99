@@ -21,6 +21,12 @@ logging:
         # web: DEBUG
         security: DEBUG
 
+sentry:
+  dsn: https://08e77c89031d3ca8019ad9a301ef6771@o4509558811197440.ingest.de.sentry.io/4509559068295248
+  # Add data like request headers and IP for users,
+  # see https://docs.sentry.io/platforms/java/guides/spring-boot/data-management/data-collected/ for more info
+  send-default-pii: true
+
 server:
   address: 0.0.0.0
   port: ${PORT:8080}
