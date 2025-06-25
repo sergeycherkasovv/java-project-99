@@ -9,6 +9,7 @@ plugins {
 	id("org.sonarqube") version "6.2.0.5505"
 	id("org.springframework.boot") version "3.5.0"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("io.sentry.jvm.gradle") version "5.8.0"
 }
 
 group = "hexlet.code"
@@ -87,4 +88,19 @@ sonar {
 		property("sonar.organization", "sergeycherkasovv")
 		property("sonar.host.url", "https://sonarcloud.io")
 	}
+}
+
+sentry {
+  // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+  // This enables source context, allowing you to see your source
+  // code as part of your stack traces in Sentry.
+  includeSourceContext = true
+
+  org = "hexlet-rf"
+  projectName = "java-spring-boot"
+  authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+
+tasks.sentryBundleSourcesJava {
+    enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }
