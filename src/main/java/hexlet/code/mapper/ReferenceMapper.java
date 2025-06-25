@@ -38,7 +38,8 @@ public abstract class ReferenceMapper {
     public TaskStatus toTaskStatusBySlug(String slug) {
         return slug != null
                 ? taskStatusRepository
-                    .findBySlug(slug).orElseThrow(() -> new ResourceNotFoundException("Not slug: " + slug))
+                    .findBySlug(slug)
+                    .orElseThrow(() -> new ResourceNotFoundException("Not slug: " + slug))
                 : null;
     }
 
@@ -46,14 +47,20 @@ public abstract class ReferenceMapper {
     public Set<Label> toLabelsById(Set<Long> labelsId) {
         return labelsId == null || labelsId.isEmpty()
                 ? new HashSet<>()
-                : labelsId.stream().map(this::getLabelById).collect(Collectors.toSet());
+                : labelsId
+                    .stream()
+                    .map(this::getLabelById)
+                    .collect(Collectors.toSet());
     }
 
     @Named("toIdByLabels")
     public Set<Long> toIdByLabels(Set<Label> labels) {
         return labels == null || labels.isEmpty()
                 ? new HashSet<>()
-                : labels.stream().map(Label::getId).collect(Collectors.toSet());
+                : labels
+                    .stream()
+                    .map(Label::getId)
+                    .collect(Collectors.toSet());
     }
 
     private Label getLabelById(Long id) {
