@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
@@ -60,6 +61,8 @@ class TaskControllerTest {
 
     @BeforeEach
     void setUp() {
+        taskRepository.deleteAll();
+
         mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
@@ -124,7 +127,7 @@ class TaskControllerTest {
     void create() throws Exception {
         var createData = new TaskCreateDTO();
         createData.setIndex(testTask.getIndex());
-        createData.setTitle("TestTask");
+        createData.setTitle(testTask.getName().toLowerCase());
         createData.setContent(testTask.getDescription());
         createData.setStatus(testTask.getTaskStatus().getSlug());
         createData.setAssigneeId(testTask.getAssignee().getId());
@@ -142,21 +145,35 @@ class TaskControllerTest {
         assertThat(task.getDescription()).isEqualTo(createData.getContent());
         assertThat(task.getTaskStatus().getSlug()).isEqualTo(createData.getStatus());
         assertThat(task.getAssignee().getId()).isEqualTo(createData.getAssigneeId());
+        assertThat(task.getName()).isEqualTo(createData.getTitle());
     }
 
     @Test
     void update() throws Exception {
+        var taskId = testTask.getId();
+
         var data = new HashMap<>();
         data.put("index", 12345);
 
-        var request = put(urlId, testTask.getId())
+        var request = put(urlId, taskId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isOk());
 
-        var task = taskRepository.findById(testTask.getId()).orElseThrow();
+        var task = taskRepository.findById(taskId).orElseThrow();
 
         assertThat(task.getIndex()).isEqualTo(12345);
+    }
+
+    @Test
+    void destroy() throws Exception {
+        var taskId = testTask.getId();
+
+        mvc.perform(delete(urlId, taskId))
+                .andExpect(status().isNoContent());
+
+        var task = taskRepository.existsById(taskId);
+        assertThat(task).isFalse();
     }
 }
