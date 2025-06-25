@@ -127,17 +127,19 @@ class UserControllerTest {
 
     @Test
     void update() throws Exception {
+        var userId = testUser.getId();
+
         var data = new HashMap<>();
         data.put("firstName", "Mike");
 
-        var request = put(urlId, testUser.getId())
+        var request = put(urlId, userId)
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(data));
 
         mvc.perform(request).andExpect(status().isOk());
 
-        var user = userRepository.findById(testUser.getId()).orElseThrow();
+        var user = userRepository.findById(userId).orElseThrow();
 
         assertThat(user.getFirstName()).isEqualTo(("Mike"));
     }
