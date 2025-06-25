@@ -59,6 +59,8 @@ class LabelControllerTest {
 
     @BeforeEach
     void setUp() {
+        labelRepository.deleteAll();
+
         mvc = MockMvcBuilders.webAppContextSetup(wac)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build();
