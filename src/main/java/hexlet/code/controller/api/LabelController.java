@@ -23,38 +23,41 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/labels")
 public class LabelController {
+    private final String id = "/{id}";
+
     @Autowired
     private LabelService labelService;
 
     @GetMapping
     ResponseEntity<List<LabelDTO>> index() {
         var lebelDTOList = labelService.getAllLabel();
+
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(lebelDTOList.size()))
                 .body(lebelDTOList);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(id)
     @ResponseStatus(HttpStatus.OK)
-    public LabelDTO show(@PathVariable Long id) {
+    LabelDTO show(@PathVariable Long id) {
         return labelService.findByIdLabel(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LabelDTO create(@RequestBody @Valid LabelCreateDTO labelDTO) {
+    LabelDTO create(@RequestBody @Valid LabelCreateDTO labelDTO) {
         return labelService.createLabel(labelDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(id)
     @ResponseStatus(HttpStatus.OK)
-    public LabelDTO update(@RequestBody @Valid LabelUpdateDTO labelDTO, @PathVariable Long id) {
+    LabelDTO update(@RequestBody @Valid LabelUpdateDTO labelDTO, @PathVariable Long id) {
         return labelService.updateLabel(labelDTO, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(id)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void destroy(@PathVariable Long id) {
+    void destroy(@PathVariable Long id) {
         labelService.deleteLabel(id);
     }
 }
