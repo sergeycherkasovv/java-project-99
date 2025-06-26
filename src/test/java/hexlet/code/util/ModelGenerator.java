@@ -49,8 +49,9 @@ public class ModelGenerator {
         taskStatusModel = Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
                 .supply(Select.field(TaskStatus::getName), () -> faker.book().title()
-                                                                + faker.coffee().name1())
-                .supply(Select.field(TaskStatus::getSlug), () -> faker.music().genre())
+                                                                 + faker.number().numberBetween(1, 100))
+                .supply(Select.field(TaskStatus::getSlug), () -> faker.music().genre()
+                                                                    + faker.number().numberBetween(1, 100))
                 .toModel();
 
         labelModel = Instancio.of(Label.class)
