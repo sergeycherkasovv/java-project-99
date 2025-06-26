@@ -53,14 +53,12 @@ cd java-project-99
 ```bash
 make start-prod
 ```
-3. Открыть в браузере:
-```bash
-http://lovalhost:8080
-```
-4. OpenAPI(Swagger) документация:
-```bash
-http://localhost:8080/swagger-ui.html
-```
+3. Открыть в браузере http://localhost:8080
+
+
+4. OpenAPI(Swagger) документация http://localhost:8080/swagger-ui.html
+
+
 5. Посмотреть доступные команды:
 ```bash
 make help
