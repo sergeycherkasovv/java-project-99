@@ -75,6 +75,9 @@ public class ModelGenerator {
                 .supply(Select.field(Task::getTaskStatus), () -> taskStatus)
                 .supply(Select.field(Task::getAssignee), () -> user)
                 .supply(Select.field(Task::getLabels), () -> Set.of(label))
+//                .ignore(Select.field(Task::getTaskStatus))
+//                .ignore(Select.field(Task::getAssignee))
+//                .ignore(Select.field(Task::getLabels))
                 .toModel();
     }
 }
