@@ -97,7 +97,7 @@ sentry {
   includeSourceContext = true
 
   org = "hexlet-rf"
-  projectName = "java-spring-boot"
+  projectName = "task-manager"
   authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
