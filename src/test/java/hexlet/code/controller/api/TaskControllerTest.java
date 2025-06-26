@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 
 @SpringBootTest
@@ -68,6 +69,9 @@ class TaskControllerTest {
                 .build();
 
         testTask = Instancio.of(modelGenerator.getTaskModel()).create();
+        testTask.setTaskStatus(modelGenerator.getTaskStatus());
+        testTask.setAssignee(modelGenerator.getUser());
+        testTask.setLabels(Set.of(modelGenerator.getLabel()));
         taskRepository.save(testTask);
     }
 

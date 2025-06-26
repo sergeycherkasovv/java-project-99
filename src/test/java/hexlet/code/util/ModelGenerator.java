@@ -63,21 +63,21 @@ public class ModelGenerator {
                 .supply(Select.field(Label::getName), () -> faker.music().genre())
                 .toModel();
 
-        user = userRepository.save(Instancio.create(userModel));
-        taskStatus = taskStatusRepository.save(Instancio.create(taskStatusModel));
-        label = labelRepository.save(Instancio.create(labelModel));
+//        user = userRepository.save(Instancio.create(userModel));
+//        taskStatus = taskStatusRepository.save(Instancio.create(taskStatusModel));
+//        label = labelRepository.save(Instancio.create(labelModel));
 
         taskModel = Instancio.of(Task.class)
                 .ignore(Select.field(Task::getId))
                 .supply(Select.field(Task::getName), () -> faker.book().genre())
                 .supply(Select.field(Task::getIndex), () -> faker.number().numberBetween(1, 1000))
                 .supply(Select.field(Task::getDescription), () -> faker.hobbit().quote())
-                .supply(Select.field(Task::getTaskStatus), () -> taskStatus)
-                .supply(Select.field(Task::getAssignee), () -> user)
-                .supply(Select.field(Task::getLabels), () -> Set.of(label))
-//                .ignore(Select.field(Task::getTaskStatus))
-//                .ignore(Select.field(Task::getAssignee))
-//                .ignore(Select.field(Task::getLabels))
+//                .supply(Select.field(Task::getTaskStatus), () -> taskStatus)
+//                .supply(Select.field(Task::getAssignee), () -> user)
+//                .supply(Select.field(Task::getLabels), () -> Set.of(label))
+                .ignore(Select.field(Task::getTaskStatus))
+                .ignore(Select.field(Task::getAssignee))
+                .ignore(Select.field(Task::getLabels))
                 .toModel();
     }
 }
