@@ -8,6 +8,7 @@ import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
 import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.UserRepository;
 import hexlet.code.specification.TaskSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class TaskService {
     @Autowired
     private TaskSpecification taskSpecification;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<TaskDTO> getAllTask(TaskParamsDTO params) {
         var spec = taskSpecification.build(params);
         var tasks = taskRepository.findAll(spec);
@@ -39,7 +43,13 @@ public class TaskService {
     }
 
     public TaskDTO createTask(TaskCreateDTO taskData) {
+        var user = userRepository.findById(taskData.getAssigneeId())
+                .orElseThrow(() -> new ResourceNotFoundException("User with id "
+                                                                    + taskData.getAssigneeId()
+                                                                    + " not found"));
         var task = taskMapper.map(taskData);
+        task.setAssignee(user);
+
         taskRepository.save(task);
 
 
