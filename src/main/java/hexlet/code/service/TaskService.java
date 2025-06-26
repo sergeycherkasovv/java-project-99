@@ -25,9 +25,6 @@ public class TaskService {
     @Autowired
     private TaskSpecification taskSpecification;
 
-//    @Autowired
-//    private UserRepository userRepository;
-
     public List<TaskDTO> getAllTask(TaskParamsDTO params) {
         var spec = taskSpecification.build(params);
         var tasks = taskRepository.findAll(spec);
@@ -42,16 +39,7 @@ public class TaskService {
     }
 
     public TaskDTO createTask(TaskCreateDTO taskData) {
-//        Long assigneeId = taskData.getAssigneeId();
-//        User user = null;
-//        if (assigneeId != null) {
-//            user = userRepository.findById(assigneeId)
-//                    .orElseThrow(() -> new IllegalArgumentException("User with id " + assigneeId + " not found"));
-//        }
-
         var task = taskMapper.map(taskData);
-//        task.setAssignee(user);
-
         taskRepository.save(task);
 
         return taskMapper.map(task);
