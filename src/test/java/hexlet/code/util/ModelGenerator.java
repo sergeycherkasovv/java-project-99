@@ -26,6 +26,10 @@ public class ModelGenerator {
     private Model<Task> taskModel;
     private Model<Label> labelModel;
 
+    private User user;
+    private TaskStatus taskStatus;
+    private Label label;
+
     @Autowired
     private Faker faker;
 
@@ -59,9 +63,9 @@ public class ModelGenerator {
                 .supply(Select.field(Label::getName), () -> faker.music().genre())
                 .toModel();
 
-        var user = userRepository.save(Instancio.create(userModel));
-        var taskStatus = taskStatusRepository.save(Instancio.create(taskStatusModel));
-        var label = labelRepository.save(Instancio.create(labelModel));
+        user = userRepository.save(Instancio.create(userModel));
+        taskStatus = taskStatusRepository.save(Instancio.create(taskStatusModel));
+        label = labelRepository.save(Instancio.create(labelModel));
 
         taskModel = Instancio.of(Task.class)
                 .ignore(Select.field(Task::getId))
