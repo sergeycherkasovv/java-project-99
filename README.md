@@ -49,11 +49,11 @@
 git git@github.com:sergeycherkasovv/java-project-99.git
 cd java-project-99
 ````
-2. Запустить приложения:
+2. Запустить локально:
 ```bash
 make start-prod
 ```
-3. Открытие приложение:
+3. Открыть в браузере:
 ```bash
 http://lovalhost:8080
 ```
@@ -71,7 +71,7 @@ make help
     ├── .github/                          # CI (GitHub Actions)
     ├── src/
     │   ├── main/
-    │   │   ├── java/hexlet/code/
+    │   │   ├── java/hexlet/code/         
     │   │   │   ├── component/            # Наполнение БД и ключи
     │   │   │   ├── config/               # Конфигурации Spring Security
     │   │   │   ├── controller/           # REST контроллеры
@@ -88,7 +88,9 @@ make help
     │   │   └── resources/
     │   │       └── application.yml       # Конфиги Spring
     │   └── test/
-    │       └── java/hexlet/code/         # Тесты (unit, integration)
+    │       └── java/hexlet/code/         
+    │           ├── controller/           # Интеграционные тесты
+    │           └── util/                 # Наполнение БД для тестов
     ├── build.gradle.kts                  # Gradle сборка (Kotlin DSL)
     ├── Makefile                          # Команды для сборки, запуска и тестов
     └── README.md  
