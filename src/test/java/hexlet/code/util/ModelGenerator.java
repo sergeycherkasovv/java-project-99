@@ -16,7 +16,7 @@ import org.instancio.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+//import java.util.Set;
 
 @Getter
 @Component
@@ -25,10 +25,6 @@ public class ModelGenerator {
     private Model<TaskStatus> taskStatusModel;
     private Model<Task> taskModel;
     private Model<Label> labelModel;
-
-    private User user;
-    private TaskStatus taskStatus;
-    private Label label;
 
     @Autowired
     private Faker faker;
@@ -49,13 +45,14 @@ public class ModelGenerator {
                 .ignore(Select.field(User::getId))
                 .supply(Select.field(User::getFirstName), () -> faker.name().firstName())
                 .supply(Select.field(User::getLastName), () -> faker.name().lastName())
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
+                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress(faker.name().username()))
                 .toModel();
 
         taskStatusModel = Instancio.of(TaskStatus.class)
                 .ignore(Select.field(TaskStatus::getId))
-                .supply(Select.field(TaskStatus::getName), () -> faker.name().name())
-                .supply(Select.field(TaskStatus::getSlug), () -> faker.name().name())
+                .supply(Select.field(TaskStatus::getName), () -> faker.book().title()
+                                                                + faker.number().numberBetween(1, 1000))
+                .supply(Select.field(TaskStatus::getSlug), () -> faker.music().genre())
                 .toModel();
 
         labelModel = Instancio.of(Label.class)
@@ -63,18 +60,13 @@ public class ModelGenerator {
                 .supply(Select.field(Label::getName), () -> faker.music().genre())
                 .toModel();
 
-//        user = userRepository.save(Instancio.create(userModel));
-//        taskStatus = taskStatusRepository.save(Instancio.create(taskStatusModel));
-//        label = labelRepository.save(Instancio.create(labelModel));
-
         taskModel = Instancio.of(Task.class)
                 .ignore(Select.field(Task::getId))
-                .supply(Select.field(Task::getName), () -> faker.book().genre())
+                .supply(Select.field(Task::getName), () -> faker.gameOfThrones().city()
+                                                            + faker.number().numberBetween(1, 100))
                 .supply(Select.field(Task::getIndex), () -> faker.number().numberBetween(1, 1000))
-                .supply(Select.field(Task::getDescription), () -> faker.hobbit().quote())
-//                .supply(Select.field(Task::getTaskStatus), () -> taskStatus)
-//                .supply(Select.field(Task::getAssignee), () -> user)
-//                .supply(Select.field(Task::getLabels), () -> Set.of(label))
+                .supply(Select.field(Task::getDescription), () -> faker.book().title()
+                                                                    + faker.number().numberBetween(1, 100))
                 .ignore(Select.field(Task::getTaskStatus))
                 .ignore(Select.field(Task::getAssignee))
                 .ignore(Select.field(Task::getLabels))
