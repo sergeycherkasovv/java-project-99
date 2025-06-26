@@ -96,9 +96,7 @@ make help
     └── README.md  
 
 ## 📮 Автор
-Разработано в рамках обучения на Hexlet.  
+Разработано в рамках обучения на Hexlet.
 Автор: [sergeycherkasovv](https://github.com/sergeycherkasovv)
 
 Почта: iamcherkasov.job@gmail.com
-
-Telegram: https://t.me/iamcherkasov
