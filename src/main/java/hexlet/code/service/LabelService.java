@@ -5,7 +5,6 @@ import hexlet.code.dto.label.LabelDTO;
 import hexlet.code.dto.label.LabelUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.LabelMapper;
-import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,8 @@ public class LabelService {
     }
 
     public LabelDTO findByIdLabel(Long id) {
-        var label = findLabelByIdOrThrow(id);
+        var label = labelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
 
         return labelMapper.map(label);
     }
@@ -40,7 +40,9 @@ public class LabelService {
     }
 
     public LabelDTO updateLabel(LabelUpdateDTO labelDTO, Long id) {
-        var label = findLabelByIdOrThrow(id);
+        var label = labelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
+
         labelMapper.update(labelDTO, label);
         labelRepository.save(label);
 
@@ -49,10 +51,5 @@ public class LabelService {
 
     public void deleteLabel(Long id) {
         labelRepository.deleteById(id);
-    }
-
-    private Label findLabelByIdOrThrow(Long id) {
-        return labelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found"));
     }
 }
