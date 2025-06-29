@@ -23,7 +23,7 @@ public class EncodersConfig {
     private final RsaKeyProperties rsaKeys;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
