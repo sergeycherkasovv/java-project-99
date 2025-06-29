@@ -13,6 +13,7 @@ public class UserUtils {
 
     public User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
