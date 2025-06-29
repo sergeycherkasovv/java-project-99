@@ -53,11 +53,18 @@ cd java-project-99
 ```bash
 make start-prod
 ```
-3. Открыть в браузере http://localhost:8080
+3. Открыть в браузере 
+```
+http://localhost:8080
 
+username: hexlet@example.com
+password: qwerty
+```
 
-4. OpenAPI(Swagger) документация http://localhost:8080/swagger-ui.html
-
+4. OpenAPI(Swagger) документация 
+```
+http://localhost:8080/swagger-ui.html
+```
 
 5. Посмотреть доступные команды:
 ```bash
