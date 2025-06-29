@@ -5,7 +5,6 @@ import hexlet.code.dto.user.UserDTO;
 import hexlet.code.dto.user.UserUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.UserMapper;
-import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,8 @@ public class UserService {
     }
 
     public UserDTO findByIdUser(Long id) {
-        var user = findUserByIdOrThrow(id);
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
 
         return userMapper.map(user);
     }
@@ -40,7 +40,9 @@ public class UserService {
     }
 
     public UserDTO updateUser(UserUpdateDTO userData, Long id) {
-        var user = findUserByIdOrThrow(id);
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
+
         userMapper.update(userData, user);
         userRepository.save(user);
 
@@ -49,10 +51,5 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
-    }
-
-    private User findUserByIdOrThrow(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"));
     }
 }
