@@ -27,7 +27,8 @@ public class TaskStatusService {
     }
 
     public TaskStatusDTO findByIdTaskStatus(Long id) {
-        var taskStatus = findTaskStatusByIdOrThrow(id);
+        var taskStatus = taskStatusRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with id " + id + " not found"));
 
         return taskStatusMapper.map(taskStatus);
     }
@@ -40,7 +41,9 @@ public class TaskStatusService {
     }
 
     public TaskStatusDTO updateTaskStatus(TaskStatusUpdateDTO taskStatusData, Long id) {
-        var taskStatus = findTaskStatusByIdOrThrow(id);
+        var taskStatus = taskStatusRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with id " + id + " not found"));
+
         taskStatusMapper.update(taskStatusData, taskStatus);
         taskStatusRepository.save(taskStatus);
 
@@ -49,10 +52,5 @@ public class TaskStatusService {
 
     public void deleteTaskStatus(Long id) {
         taskStatusRepository.deleteById(id);
-    }
-
-    private TaskStatus findTaskStatusByIdOrThrow(Long id) {
-        return taskStatusRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("TaskStatus with id " + id + " not found"));
     }
 }
