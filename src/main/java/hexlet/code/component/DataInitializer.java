@@ -11,7 +11,6 @@ import hexlet.code.service.TaskStatusService;
 import hexlet.code.service.UserService;
 import lombok.AllArgsConstructor;
 import net.datafaker.Faker;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -23,22 +22,11 @@ import java.util.stream.IntStream;
 @Component
 @AllArgsConstructor
 public class DataInitializer implements ApplicationRunner {
-    @Autowired
     private final UserRepository userRepository;
-
-    @Autowired
     private final UserService userService;
-
-    @Autowired
     private final TaskStatusService taskStatusService;
-
-    @Autowired
     private final TaskService taskService;
-
-    @Autowired
     private final LabelService labelService;
-
-    @Autowired
     private final Faker faker;
 
     @Override
