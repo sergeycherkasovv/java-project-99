@@ -21,4 +21,11 @@ public class UserUtils {
 
         return userRepository.findByEmail(email).get();
     }
+
+    public boolean isUser(long id) {
+        var userEmail = userRepository.findById(id).get().getEmail();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return userEmail.equals(authentication.getName());
+    }
 }
