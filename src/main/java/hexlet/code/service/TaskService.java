@@ -6,7 +6,6 @@ import hexlet.code.dto.task.TaskParamsDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
-import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.specification.TaskSpecification;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,8 @@ public class TaskService {
     }
 
     public TaskDTO findByIdTask(Long id) {
-        var task = findTaskByIdOrThrow(id);
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
 
         return taskMapper.map(task);
     }
@@ -42,7 +42,9 @@ public class TaskService {
     }
 
     public TaskDTO updateTask(TaskUpdateDTO taskData, Long id) {
-        var task = findTaskByIdOrThrow(id);
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+
         taskMapper.update(taskData, task);
         taskRepository.save(task);
 
@@ -51,10 +53,5 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
-    }
-
-    private Task findTaskByIdOrThrow(Long id) {
-        return taskRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
     }
 }
