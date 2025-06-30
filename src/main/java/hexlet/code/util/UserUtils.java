@@ -21,11 +21,14 @@ public class UserUtils {
 
         var email = authentication.getName();
 
-        return userRepository.findByEmail(email).get();
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));
     }
 
     public boolean isCurrentUser(long id) {
-        var userEmail = userRepository.findById(id).get().getEmail();
+        var userEmail = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found"))
+                .getEmail();
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return userEmail.equals(authentication.getName());

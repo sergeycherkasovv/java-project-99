@@ -4,6 +4,7 @@ import hexlet.code.dto.label.LabelCreateDTO;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.taskStatus.TaskStatusCreateDTO;
 import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.LabelService;
 import hexlet.code.service.TaskService;
@@ -58,7 +59,8 @@ public class DataInitializer implements ApplicationRunner {
         });
 
         // Task
-        var user = userRepository.findByEmail(email).get();
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " not found"));
 
         taskStatusData.values().forEach(v ->
             IntStream.range(1, 5).forEach(i -> {
