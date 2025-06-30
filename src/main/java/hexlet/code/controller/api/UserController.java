@@ -50,14 +50,14 @@ public class UserController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("@userUtils.isUser(#id)")
+    @PreAuthorize("@userUtils.isCurrentUser(#id)")
     UserDTO update(@RequestBody @Valid UserUpdateDTO userData, @PathVariable Long id) {
         return userService.updateUser(userData, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("@userUtils.isUser(#id)")
+    @PreAuthorize("@userUtils.isCurrentUser(#id)")
     void destroy(@PathVariable Long id) {
         userService.deleteUser(id);
     }

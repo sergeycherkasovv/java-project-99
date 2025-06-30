@@ -1,5 +1,6 @@
 package hexlet.code.util;
 
+import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class UserUtils {
         return userRepository.findByEmail(email).get();
     }
 
-    public boolean isUser(long id) {
+    public boolean isCurrentUser(long id) {
         var userEmail = userRepository.findById(id).get().getEmail();
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
