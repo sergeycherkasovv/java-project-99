@@ -32,6 +32,7 @@ public class SecurityConfig {
             throws Exception {
 
         return http
+                // CSRF protection is disabled because this app uses stateless JWT-based authentication
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/").permitAll()
