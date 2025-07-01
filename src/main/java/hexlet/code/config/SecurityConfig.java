@@ -32,7 +32,7 @@ public class SecurityConfig {
             throws Exception {
 
         return http
-                //.csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
