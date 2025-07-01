@@ -104,11 +104,3 @@ sentry {
 tasks.sentryBundleSourcesJava {
     enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }
-
-configurations {
-	all {
-		resolutionStrategy {
-			disableDependencyVerification() // Sensitive: dependency verification is disabled
-		}
-	}
-}
